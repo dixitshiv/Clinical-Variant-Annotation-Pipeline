@@ -1,5 +1,18 @@
 import requests
 import pandas as pd
+import time
+
+def safe_api_call(func, max_retries=2):
+    """Retry API calls on failure."""
+    for attempt in range(max_retries):
+        try:
+            return func()
+        except Exception as e:
+            if attempt < max_retries - 1:
+                time.sleep(1)
+            else:
+                return None
+    return None
 
 def annotate_with_clinvar(df):
     """Add ClinVar annotations using NCBI E-utilities API."""
